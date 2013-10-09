@@ -1,24 +1,40 @@
+# require_relative './command_line.rb'
+# require_relative './student_class.rb'
+
 require 'open-uri'
 require 'nokogiri'
 
 class StudentScraper
-  attr_accessor :student_profile
+  attr_accessor :student_profile, :student_name, :student_url, :student_hash
 
-  def initialize(student_url)
-   @student_profile = Nokogiri::HTML(open(student_url))
+  def initialize(student_name)
+    @student_name = student_name.downcase.strip
+    self.scrape_url
+    @student_profile = Nokogiri::HTML(open(@student_url))
+    self.call
   end
 
+  def scrape_url
+    flatiron_page = Nokogiri::HTML(open("http://students.flatironschool.com"))
+    flatiron_page.css("div.big-comment").each do |student|
+      if student.css("h3").text.downcase.include? (@student_name)
+       @student_url = "http://students.flatironschool.com/" + student.css("a").attribute("href").value
+     end
+    end
+  end
+
+
   def call
-    student_info={}
-    student_name; student_info[:name]=@student_name
-    student_social_links; student_info[:social_links]=@student_social_links
-    student_tagline; student_info[:tagline]=@student_tagline
-    student_bio; student_info[:bio]=@student_bio
-    student_education; student_info[:education]=@student_education
-    student_work; student_info[:work]=@student_work
-    student_coder_cred; student_info[student_coder_cred]= @student_coder_cred
-    student_links; student_info[:links]=@student_links
-    return student_info
+    @student_hash={}
+    student_name; student_hash[:name]=@student_name
+    student_social_links; student_hash[:social_links]=@student_social_links
+    student_tagline; student_hash[:tagline]=@student_tagline
+    student_bio; student_hash[:bio]=@student_bio
+    student_education; student_hash[:education]=@student_education
+    student_work; student_hash[:work]=@student_work
+    student_coder_cred; student_hash[student_coder_cred]= @student_coder_cred
+    student_links; student_hash[:links]=@student_links
+    return @student_hash
   end
 
   def student_name
@@ -72,8 +88,12 @@ class StudentScraper
 
 end
 
-mike = StudentScraper.new("http://students.flatironschool.com/students/mike_spangler.html")
-mike.call
+# mike = StudentScraper.new("http://students.flatironschool.com/students/mike_spangler.html")
+# mike.call
+
+
+# student scraper creates an array 
+
 
   # student_profile = Nokogiri::HTML(open("http://students.flatironschool.com/students/mike_spangler.html"))
 
