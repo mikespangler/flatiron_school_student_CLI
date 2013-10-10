@@ -5,27 +5,64 @@ require 'open-uri'
 require 'pry'
 require 'nokogiri'
 
+STUDENTS =[
+   "Anders Ramsay",
+   "Bana Malik",
+   "Brendan Manley",
+   "Charlotte Chang",
+   "Christopher Lee",
+   "Daniel Chang",
+   "David Bella",
+   "Edina Vath",
+   "Emily Xie",
+   "Greg Eng",
+   "Ian Miller",
+   "Iris Lee",
+   "Ivan Brennan",
+   "James Tong",
+   "Jeanne Roniger",
+   "Joe O'Conor",
+   "John Richardson",
+   "Joshua Scaglione",
+   "Kyle Shike",
+   "Logan Hasson",
+   "Manuel Neuhauser",
+   "Margaret Lee",
+   "Matt Campbell",
+   "Michael Polycarpou",
+   "Mike Spangler",
+   "Raymond Gan",
+   "Rosanne Hoyem",
+   "Sam Yang",
+   "Samuel Owens",
+   "Saron Yitbarek",
+   "Scott Luptowski",
+   "Vivian Zhang",
+   "Sonja Hall",
+   "Stephanie Oh",
+   "Theo Vora",
+   "Thomas Surgent",
+   "Tiffany Peon",
+   "Trevor McKendrick",
+   "Vinney Cavallo"
+   ]
+
 class CLIStudent
-APPROVED_COMMANDS ||= [:browse, :list, :exit, :show]
+
+APPROVED_COMMANDS ||= [:browse, :exit, :show, :help]
 
 attr_reader :on
 
   def initialize
-    # @students_array=students_array
     @on=true
   end
 
 
   def call
-    # binding.pry
-    puts "Hey there. Welcome to our awesome students!"
-    puts "Who do you want to scrape today? Please type a first and last name of a student."
-    @student_name_input=gets.strip.downcase
-    @student_hash_object=StudentScraper.new(@student_name_input) 
-    @new_student=@student_hash_object.student_hash.class
-    @student_object=Student.new(@new_student)
-    puts @student_object
-    while @on==true
+    puts "Hey there. Welcome to our awesome student database!"
+    puts "Please type one of the following: browse, help, exit, or show."
+    command_request
+    while @on == true
       self.help
     end
   end
@@ -52,26 +89,37 @@ attr_reader :on
     @on=false
   end
  
-  # def browse
-  #   @student_object.each_with_index do |student, index|
-  #     puts "#{index+1}. #{student.student_name}"
-  #   end
-  # end
+  def browse
+    puts STUDENTS
+  end
 
-  # def show
-  #   puts "Please enter a student's first or last name to see their info."
-  #   name=gets.strip.downcase
-  #     @student_object.each_with_index do |student, index|
-  #       if "#{student.name}".downcase.include?(name)
-  #     puts "#{index+1}. #{student.student_name}
-  #                       #{student.student_blogs}
-  #                       #{student.student_social_links}
-  #                       #{student.student_bio}
-  #     "
-  #       end
-  #   end
-  # end
+  def show
+    puts "Who do you want to scrape today? Please type a first and last name of a student."
+    @student_name_input = gets.strip.downcase
+    begin
+    @student_object = StudentScraper.new(@student_name_input)
+    system("clear")
+    puts "Student Name: #{@student_object.student_name}"
+    puts "Tagline: #{@student_object.student_tagline.strip}"
+    puts "Bio: #{@student_object.student_bio.strip}"
+    puts "Work: #{@student_object.student_work.strip}"
+    puts "Education: #{@student_object.student_education.strip}"
+    puts "Twitter Link: #{@student_object.student_social_links[0]}"
+    puts "LinkedIn Link: #{@student_object.student_social_links[1]}"
+    puts "Github Link: #{@student_object.student_social_links[2]}"
+    puts "Coder Cred: #{@student_object.student_coder_cred}"
+    rescue
+      puts "Whoops!  We don't have a student by that name.."
+      self.show
+    end
+  end
+
+
+
+
 end
+
+
 
 mike=CLIStudent.new
 mike.call

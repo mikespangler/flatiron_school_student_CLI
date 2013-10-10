@@ -5,13 +5,16 @@ require 'open-uri'
 require 'nokogiri'
 
 class StudentScraper
-  attr_accessor :student_profile, :student_name, :student_url, :student_hash
+  attr_accessor :student_profile, :student_name, :student_url, :student_hash, :github
 
   def initialize(student_name)
     @student_name = student_name.downcase.strip
     self.scrape_url
-    @student_profile = Nokogiri::HTML(open(@student_url))
+ 
+      @student_profile = Nokogiri::HTML(open(@student_url)) 
+
     self.call
+      
   end
 
   def scrape_url
@@ -26,15 +29,19 @@ class StudentScraper
 
   def call
     @student_hash={}
-    student_name; student_hash[:name]=@student_name
-    student_social_links; student_hash[:social_links]=@student_social_links
-    student_tagline; student_hash[:tagline]=@student_tagline
-    student_bio; student_hash[:bio]=@student_bio
-    student_education; student_hash[:education]=@student_education
-    student_work; student_hash[:work]=@student_work
-    student_coder_cred; student_hash[student_coder_cred]= @student_coder_cred
-    student_links; student_hash[:links]=@student_links
-    return @student_hash
+    student_name; student_hash[:name]= @student_name
+    student_social_links; student_hash[:social_links]
+    # student_social_links; student_hash[:social_links]<< @twitter
+    # student_social_links; student_hash[:social_links][1]= @linkedin
+    # student_social_links; student_hash[:social_links][2]= @github
+
+    student_tagline; student_hash[:tagline]= @student_tagline
+    student_bio; student_hash[:bio]= @student_bio
+    student_education; student_hash[:education]= @student_education
+    student_work; student_hash[:work]= @student_work
+    student_coder_cred; student_hash[:student_coder_cred]= @student_coder_cred
+    student_links; student_hash[:links]= @student_links
+    @student_hash
   end
 
   def student_name
@@ -154,44 +161,3 @@ end
 
 
 
-# students =[
-#    # "Anders Ramsay",
-#    # "Bana Malik",
-#    # "Brendan Manley",
-#    # "Charlotte Chang",
-#    # "Christopher Lee",
-#    # "Daniel Chang",
-#    # "David Bella",
-#    # "Edina Vath",
-#    # "Emily Xie",
-#    # "Greg Eng",
-#    # "Ian Miller",
-#    # "Iris Lee",
-#    # "Ivan Brennan",
-#    # "James Tong",
-#    # "Jeanne Roniger",
-#    # "Joe O'Conor",
-#    # "John Richardson",
-#    # "Joshua Scaglione",
-#    # "Kyle Shike",
-#    # "Logan Hasson",
-#    # "Manuel Neuhauser",
-#    # "Margaret Lee",
-#    # "Matt Campbell",
-#    # "Michael Polycarpou",
-#    # "Mike Spangler",
-#    # "Raymond Gan",
-#    # "Rosanne Hoyem",
-#    # "Sam Yang",
-#    # "Samuel Owens",
-#    # "Saron Yitbarek",
-#    # "Scott Luptowski",
-#    # "Vivian Zhang",
-#    # "Sonja Hall",
-#    # "Stephanie Oh",
-#    # "Theo Vora",
-#    # "Thomas Surgent",
-#    # "Tiffany Peon",
-#    # "Trevor McKendrick",
-#    # "Vinney Cavallo"
-#    # ]
